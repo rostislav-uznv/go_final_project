@@ -3,7 +3,6 @@ package api
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -57,36 +56,8 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 
 func afterNow(date, now time.Time) bool {
 
-	if date.After(now) {
+	if date.Format(layout) > now.Format(layout) {
 		return true
 	}
 	return false
-}
-
-func nextDayHandler(w http.ResponseWriter, r *http.Request) {
-
-	var timeNow time.Time
-	var err error
-
-	now := r.FormValue("now")
-	date := r.FormValue("date")
-	repeat := r.FormValue("repeat")
-
-	if now == "" {
-		timeNow = time.Now()
-	} else {
-		timeNow, err = time.Parse(layout, now)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	res, err := NextDate(timeNow, date, repeat)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// w.Header()
-	w.Write([]byte(res))
 }

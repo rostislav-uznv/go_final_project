@@ -35,7 +35,7 @@ func Init(dbFile string) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	// defer db.Close()
 
 	if install != true {
 		return nil
