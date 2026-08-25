@@ -28,22 +28,11 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 		writeJson(w, map[string]string{"error": "empty title"})
 		return
 	}
-	// fmt.Println("Read task from form, comment:", task.Comment)
-	// fmt.Println("Read task from form, date:", task.Date)
-	// fmt.Println("Read task from form, repeat:", task.Repeat)
-	// fmt.Println("Read task from form, title:", task.Title)
-	// fmt.Println()
 
 	if err = checkDate(&task); err != nil {
 		writeJson(w, map[string]string{"error": err.Error()})
 		return
 	}
-
-	// _, err = NextDate(time.Now(), task.Date, task.Repeat)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
 
 	id, err := db.AddTask(&task)
 	if err != nil {
@@ -88,16 +77,4 @@ func checkDate(task *db.Task) error {
 	}
 
 	return nil
-}
-
-func writeJson(w http.ResponseWriter, data any) {
-	resp, err := json.Marshal(data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	w.Write(resp)
 }
