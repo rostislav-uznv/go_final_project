@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 )
 
@@ -78,6 +79,40 @@ func UpdateTask(task *Task) error {
 	}
 	// метод RowsAffected() возвращает количество записей к которым
 	// была применена SQL команда
+	count, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return errors.New(`incorrect id for updating task`)
+	}
+	return nil
+}
+
+func DeleteTask(id string) error {
+	res, err := db.Exec("DELETE from scheduler WHERE id = :id", sql.Named("id", id))
+	if err != nil {
+		return err
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return errors.New("incorrect id for deleting task")
+	}
+
+	return nil
+}
+
+func UpdateDate(task *Task) error {
+	query := `UPDATE scheduler SET date = :date WHERE id = :id`
+	res, err := db.Exec(query,
+		sql.Named("id", task.ID),
+		sql.Named("date", task.Date))
+	if err != nil {
+		return err
+	}
 	count, err := res.RowsAffected()
 	if err != nil {
 		return err

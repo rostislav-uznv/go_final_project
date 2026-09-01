@@ -40,9 +40,6 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("id:", id)
-	fmt.Println()
-
 	writeJson(w, map[string]string{"id": fmt.Sprintf("%d", id)})
 }
 
