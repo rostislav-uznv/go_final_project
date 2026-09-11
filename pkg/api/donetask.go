@@ -8,31 +8,39 @@ import (
 )
 
 func taskDoneHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		writeJson(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method not allowed"})
+		return
+	}
 	var task *db.Task
 	id := r.URL.Query().Get("id")
 	task, err := db.GetTask(id)
 	if err != nil {
-		writeJson(w, map[string]string{"error": err.Error()})
+		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}
 
 	if task.Repeat == "" {
 		err := db.DeleteTask(id)
 		if err != nil {
-			writeJson(w, map[string]string{"error": err.Error()})
+			writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			return
 		}
-		writeJson(w, map[string]string{})
+		writeJson(w, http.StatusOK, map[string]string{})
 		return
 	}
 
 	task.Date, err = NextDate(time.Now(), task.Date, task.Repeat)
 	if err != nil {
-		writeJson(w, map[string]string{"error": err.Error()})
+		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}
-	db.UpdateDate(task)
+	err = db.UpdateDate(task)
+	if err != nil {
+		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return
+	}
 
-	writeJson(w, map[string]string{})
+	writeJson(w, http.StatusOK, map[string]string{})
 
 }

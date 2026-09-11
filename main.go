@@ -15,11 +15,13 @@ func main() {
 	if TODO_DBFILE != "" {
 		dbFile = TODO_DBFILE
 	}
-	db.Init(dbFile)
-	fmt.Println("Запускаем сервер")
+	err := db.Init(dbFile)
+	if err != nil {
+		fmt.Println("Ошибка инициализации базы данных")
+		return
+	}
 
 	server.Run()
 	server.Start()
-	fmt.Println("Завершаем работу")
 
 }

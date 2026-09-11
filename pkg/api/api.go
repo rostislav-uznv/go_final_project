@@ -38,7 +38,11 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(res))
+	_, err = w.Write([]byte(res))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func taskHandler(w http.ResponseWriter, r *http.Request) {
@@ -52,5 +56,7 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 		updateTaskHandler(w, r)
 	case http.MethodDelete:
 		deleteTaskHandler(w, r)
+	default:
+		writeJson(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method not allowed"})
 	}
 }

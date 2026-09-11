@@ -16,10 +16,8 @@ type Task struct {
 
 func AddTask(task *Task) (int64, error) {
 	var id int64
-	// определите запрос
 	query := `INSERT INTO scheduler (date, title, comment, repeat) VALUES (:date, :title, :comment, :repeat)`
 	res, err := db.Exec(query,
-		// sql.Named("id", task.ID),
 		sql.Named("date", task.Date),
 		sql.Named("title", task.Title),
 		sql.Named("comment", task.Comment),
@@ -51,7 +49,6 @@ func Tasks(limit int) ([]*Task, error) {
 		return nil, err
 	}
 
-	// var TaskResp
 	return tasks, nil
 }
 
@@ -77,8 +74,6 @@ func UpdateTask(task *Task) error {
 	if err != nil {
 		return err
 	}
-	// метод RowsAffected() возвращает количество записей к которым
-	// была применена SQL команда
 	count, err := res.RowsAffected()
 	if err != nil {
 		return err
