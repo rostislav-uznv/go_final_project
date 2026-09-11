@@ -16,7 +16,7 @@ func taskDoneHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	task, err := db.GetTask(id)
 	if err != nil {
-		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeJson(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 
@@ -32,7 +32,7 @@ func taskDoneHandler(w http.ResponseWriter, r *http.Request) {
 
 	task.Date, err = NextDate(time.Now(), task.Date, task.Repeat)
 	if err != nil {
-		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeJson(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 	err = db.UpdateDate(task)

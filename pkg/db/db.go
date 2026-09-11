@@ -21,7 +21,7 @@ CREATE INDEX task_date ON scheduler (date)
 
 var db *sql.DB
 
-func Init(dbFile string) error {
+func Init(dbFile string) (*sql.DB, error) {
 	var err error
 
 	_, err = os.Stat(dbFile)
@@ -33,18 +33,18 @@ func Init(dbFile string) error {
 
 	db, err = sql.Open("sqlite", dbFile)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	// defer db.Close()
 
 	if !install {
-		return nil
+		return db, nil
 	}
 
 	_, err = db.Exec(schema)
 	if err != nil {
-		return err
+		db.Close()
+		return nil, err
 	}
 
-	return nil
+	return db, nil
 }

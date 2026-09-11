@@ -12,7 +12,7 @@ func Run() {
 	api.Init()
 }
 
-func Start() {
+func Start() error {
 	DEFAULT_TODO_PORT := "7540"
 	TODO_PORT := os.Getenv("TODO_PORT")
 	if _, err := strconv.Atoi(TODO_PORT); err != nil {
@@ -23,6 +23,8 @@ func Start() {
 	http.Handle("/", http.FileServer(http.Dir(webDir)))
 	err := http.ListenAndServe(":"+TODO_PORT, nil)
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	return nil
 }

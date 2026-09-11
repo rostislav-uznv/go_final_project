@@ -20,7 +20,7 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = json.Unmarshal(buf.Bytes(), &task); err != nil {
-		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeJson(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 
@@ -30,7 +30,7 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = checkDate(&task); err != nil {
-		writeJson(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeJson(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 

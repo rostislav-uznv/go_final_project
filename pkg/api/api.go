@@ -34,7 +34,7 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	res, err := NextDate(timeNow, date, repeat)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -47,7 +47,6 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 
 func taskHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	// обработка других методов будет добавлена на следующих шагах
 	case http.MethodPost:
 		addTaskHandler(w, r)
 	case http.MethodGet:
