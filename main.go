@@ -10,17 +10,19 @@ import (
 
 func main() {
 
+	// TODO_PASSWORD := os.Getenv("TODO_PASSWORD")
+
 	dbFile := "scheduler.db"
 	TODO_DBFILE := os.Getenv("TODO_DBFILE")
 	if TODO_DBFILE != "" {
 		dbFile = TODO_DBFILE
 	}
-	db, err := db.Init(dbFile)
+	database, err := db.Init(dbFile)
 	if err != nil {
 		fmt.Println("Ошибка инициализации базы данных")
 		return
 	}
-	db.Close()
+	defer database.Close()
 
 	server.Run()
 	err = server.Start()
