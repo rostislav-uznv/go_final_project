@@ -1,0 +1,9 @@
+services:
+  todo:
+    build: .
+    ports:
+      - "7540:7540"
+    env_file:
+      - .env
+    volumes:
+      - ./scheduler.db:/app/data/scheduler.db
