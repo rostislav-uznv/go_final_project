@@ -10,6 +10,9 @@ import (
 
 func main() {
 
+	// TODO_PASSWORD := os.Getenv("TODO_PASSWORD")
+
+	// TODO_PASSWORD = "111"
 	dbFile := "scheduler.db"
 	TODO_DBFILE := os.Getenv("TODO_DBFILE")
 	if TODO_DBFILE != "" {
